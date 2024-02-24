@@ -8,6 +8,7 @@ import foundingStory from "../assets/Images/FoundingStory.png";
 import Stats from "../components/core/About/Stats";
 import LearningGrid from "../components/core/About/LearningGrid";
 import ContactForm from "../components/core/About/ContactFormSection";
+import ReviewSlider from "../components/common/ReviewSlider";
 import Footer from "../components/common/Footer";
 
 const About = () => {
@@ -30,9 +31,9 @@ const About = () => {
               and nurturing a vibrant learning community.
             </div>
             <div className="flex flex-row justify-between mt-10 gap-x-4 mx-auto">
-              <img src={aboutus1} alt="aboutus1" />
-              <img src={aboutus2} alt="aboutus2" />
-              <img src={aboutus3} alt="aboutus3" />
+              <img src={aboutus1} alt="aboutus1" loading="lazy" />
+              <img src={aboutus2} alt="aboutus2" loading="lazy" />
+              <img src={aboutus3} alt="aboutus3" loading="lazy" />
             </div>
           </header>
         </div>
@@ -127,8 +128,14 @@ const About = () => {
       <section>
         <ContactForm/>
       </section>
+
+      {/* section 7 */}
+      <section>
+        <ReviewSlider/>
+      </section>
+
     </div>
-    {/* section 7 */}
+    {/* section 8 */}
     <section>
         <Footer/>
       </section>

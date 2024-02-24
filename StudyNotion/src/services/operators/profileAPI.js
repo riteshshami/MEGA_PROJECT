@@ -1,11 +1,12 @@
 import { toast } from "react-hot-toast";
 
-import { setLoading, setUser } from "../../slices/authSlice";
+import { setLoading } from "../../slices/authSlice";
+import { setUser } from "../../slices/profileSlice";
 import { apiConnector } from "../apiconnector";
 import { profileEndpoints } from "../apis";
 import { logout } from "./authAPI";
 
-const {GET_USER_DETAILS_API, GET_USER_ENROLLED_COURSES_API} = profileEndpoints
+const {GET_USER_DETAILS_API, GET_USER_ENROLLED_COURSES_API, GET_INSTRUCTOR_DATA_API} = profileEndpoints
 
 export function getUserDetails(token, navigate){
     return async (dispatch) => {
@@ -13,7 +14,7 @@ export function getUserDetails(token, navigate){
         dispatch(setLoading(true))
         try{
             const response = await apiConnector("GET", GET_USER_DETAILS_API, null, {
-                    Authorization: `Bearer ${token}`,
+                Authorization: `Bearer ${token}`,
             })
             console.log("GET_USER_DETAILS API RESPONSE............", response)
 
@@ -33,14 +34,11 @@ export function getUserDetails(token, navigate){
     }
 }
 
-export function getUserEnrolledCourses(token){
-    return async (dispatch) => {
+export async function getUserEnrolledCourses(token){
         const toastId = toast.loading("Loading...")
         let result = []
         try {
-            console.log("BEFORE CALLING BACKEND API FOR ENROLLED COURSES");
-            const response = await apiConnector("GET", GET_USER_ENROLLED_COURSES_API, null, { Authorisation: `Bearer ${token}`, })
-            console.log("AFTER CALLING BACKEND API FOR ENROLLED COURSES")
+            const response = await apiConnector("GET", GET_USER_ENROLLED_COURSES_API, null, { Authorization: `Bearer ${token}`, })
             if(!response.data.success){
                 throw new Error(response.data.message)
             }
@@ -52,4 +50,22 @@ export function getUserEnrolledCourses(token){
         toast.dismiss(toastId)
         return result
     }
+
+export async function getInstructorData(token){
+    const toastId = toast.loading("Loading...");
+    let result = [];
+    try{
+        const response = await apiConnector("GET", GET_INSTRUCTOR_DATA_API, null, {
+            Authorization: `Bearer ${token}`,
+        })
+
+        console.log("GET_INSTRUCTOR_API", response);
+        result = response?.data?.course
+
+    }catch(error){
+        console.log("GET_INSTRUCTOR_API_ERROR", error);
+        toast.error("Could not get instructor data")
+    }
+    toast.dismiss(toastId);
+    return result;
 }

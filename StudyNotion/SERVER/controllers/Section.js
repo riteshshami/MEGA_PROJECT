@@ -1,5 +1,6 @@
 const Section = require("../models/Section");
 const Course = require("../models/Course");
+const SubSection = require("../models/SubSection");
 
 exports.createSection = async (req, res) => {
     try{
@@ -14,6 +15,7 @@ exports.createSection = async (req, res) => {
         }
         // create section
         const newSection = await Section.create({sectionName});
+        console.log("New Section", newSection)
         // update course with section ObjectID
         const updatedCourseDetails = await Course.findByIdAndUpdate(courseId, 
             {
@@ -22,8 +24,14 @@ exports.createSection = async (req, res) => {
                 }
             },
             {new:true},
-            );
-            // populate section and subsection
+            ).populate({
+                path:"courseContent",
+                populate:{
+                    path: "subSection",
+                }
+            })
+            .exec();
+
         // return response
         return res.status(200).json({
             success:true,
@@ -32,8 +40,8 @@ exports.createSection = async (req, res) => {
         })
     }catch(error){
         return res.status(500).json({
-            success:true,
-            message:'Section created successfully',
+            success:false,
+            message:'Section not created successfully',
             updatedCourseDetails,
         })
     }
@@ -43,7 +51,8 @@ exports.createSection = async (req, res) => {
 exports.updateSection = async (req, res) => {
     try{
         // data input
-        const {sectionName, sectionId} = req.body;
+        const {sectionName, sectionId, courseId} = req.body;
+        console.log("Request data", req.body)
         // data validation
         if (!sectionName || !sectionId){
             return res.status(400).json({
@@ -54,11 +63,20 @@ exports.updateSection = async (req, res) => {
         // update data
         const section = await Section.findByIdAndUpdate(sectionId, {sectionName}, {new:true}); 
 
+        const course = await Course.findById(courseId)
+        .populate({
+            path:"courseContent",
+            populate:{
+                path:"subSection",
+            },
+        })
+        .exec();
+
         // return response
         return res.status(200).json({
             success:true,
-            message:"Section updated successfully",
-            section,
+            message: section,
+            data:course,
         });
 
     }catch(error){
@@ -72,17 +90,41 @@ exports.updateSection = async (req, res) => {
 
 // delete section
 exports.deleteSection = async (req, res) => {
+    console.log("Request", req.body);
     try{
-        // get Id - assuming that we are sending Id in params
-        const {sectionId} = req.params
-        // delete by using function findByIdAndDelete
+        const {courseId, sectionId} = req.body;
+        await Course.findByIdAndUpdate(courseId, {
+            $pull: {
+                courseContent: sectionId,
+            }
+        })
+        const section = await Section.findById(sectionId);
+        if(!section){
+            return res.status(404).json({
+                success:false,
+                message:"Section not found",
+            })
+        }
+        // delete sub section
+        await SubSection.deleteMany({_id: {$in: section.subSection}});
+
         await Section.findByIdAndDelete(sectionId);
-        // do we need to delete the entry from the courseSchema check in testing
-        // return response
-        return res.status(200).json({
-            success:true,
-            message:"Section updated successfully",
-        });
+
+        // find the update course and return
+        const course = await Course.findById(courseId).populate({
+            path:"courseContent",
+            populate: {
+                path: "subSection"
+            }
+        })
+        .exec();
+
+        res.status(200).json({
+            success: true,
+            message: "Section deleted successfully",
+            data: course
+        })
+
     }catch(error){
         return res.status(500).json({
             success:false,

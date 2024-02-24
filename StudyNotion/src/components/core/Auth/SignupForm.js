@@ -49,7 +49,6 @@ function SignupForm() {
       ...formData,
       accountType,
     }
-
     // Setting signup data to state
     // To be used after otp verification
     dispatch(setSignupData(signupData))
@@ -83,10 +82,10 @@ function SignupForm() {
 
   return (
     <div>
-      {/* Tab */}
-      <Tab tabData={tabData} field={accountType} setField={setAccountType}/>
       {/* Form */}
       <form onSubmit={handleOnSubmit} className="flex w-full flex-col gap-y-4">
+        {/* Tab */}
+        <Tab tabData={tabData} field={accountType} setField={setAccountType}/>
         <div className="flex gap-x-4">
           <label>
             <p className="mb-1 text-[0.875rem] leading-[1.375rem] text-richblack-5">

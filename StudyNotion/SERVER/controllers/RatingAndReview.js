@@ -5,13 +5,16 @@ const Course = require("../models/Course");
 exports.createRating = async (req, res) => {
     try{
         // get user id
-        const userId = req.user.id;
+        console.log("Request in ratings and reviews controllers", req.User);
+        console.log("Request in ratings and reviews controllers", req.body);
+
+        const userId = req.User.id;
         // fetch data from req body
         const {rating, review, courseId} = req.body;
         // check if user is enrolled or not
         const courseDetails = await Course.findOne(
             {_id:courseId,
-            studentsEnrolled: {$elemMatch: {$er: userId}},},
+            studentsEnrolled: {$elemMatch: {$eq: userId}},},
         );
         if(!courseDetails){
             return res.status(404).json({
@@ -115,7 +118,7 @@ exports.getAllRating = async (req, res) => {
                             .sort({rating:"desc"})
                             .populate({
                                 path:"user",
-                                select:"firstName, lastName, email, image"
+                                select:"firstName lastName email image"
                             })
                             .populate({
                                 path:"course",
@@ -134,3 +137,5 @@ exports.getAllRating = async (req, res) => {
         });
     }
 }
+
+

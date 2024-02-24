@@ -26,14 +26,14 @@ const ExploreMore = () => {
   };
 
   return (
-    <div>
+    <div className="mt-10">
       <div className="text-4xl font-semibold text-center">
         Unlock the <HighlightText text={"Power of Code"}></HighlightText>
       </div>
       <p className="text-center text-richblack-300 text-sm mt-3">
         Learn to Build Anything You Can Imagine
       </p>
-      <div className="flex flex-row rounded-full bg-richblack-800 mb-5 mt-5 border-richblack-100 px-1 py-1">
+      {/* <div className="flex flex-row rounded-full bg-richblack-800 mb-5 mt-5 border-richblack-100 px-1 py-1">
         {tabName.map((element, index) => {
           return (
             <button
@@ -49,11 +49,11 @@ const ExploreMore = () => {
             </button>
           );
         })}
-      </div>
-      <div className="lg:h-[150px]"></div>
+      </div> */}
+      <div className="hidden lg:block lg:h-[200px]"></div>
 
       {/* course card */}
-      <div className="absolute flex flex-row gap-10 justify-between w-full">
+      <div className="lg:absolute gap-10 justify-center lg:gap-0 flex lg:justify-between flex-wrap w-full lg:bottom-[0] lg:left-[50%] lg:translate-x-[-50%] lg:translate-y-[50%] text-black lg:mb-0 mb-7 lg:px-0 px-3">
         {
             courses.map((element, index) => {
                 return(

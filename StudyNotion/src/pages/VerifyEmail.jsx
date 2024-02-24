@@ -19,7 +19,7 @@ const VerifyEmail = () => {
         if(!signupData) {
             navigate("/signup");        
         }
-    }, [])
+    })
 
     const handleOnSubmit = (e) => {
         e.preventDefault();
@@ -30,10 +30,10 @@ const VerifyEmail = () => {
             email,
             password,
             confirmPassword,
-            otp, 
-            navigate
         } = signupData;
         dispatch(signUp(accountType, firstName, lastName, email, password, confirmPassword, otp, navigate));
+        console.log("Data dispatched to authAPI");
+        setOtp("-")
     }
 
   return (

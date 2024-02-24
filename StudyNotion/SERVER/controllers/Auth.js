@@ -81,9 +81,9 @@ exports.signUp = async (req, res) => {
 
     // data validation
     if(!firstName || !lastName || !email || !password || !confirmPassword || !otp){
-        return res.status(403).json({
-            success:false,
-            message:"All fields are required",
+        return res.status(403).send({
+            success: false,
+            message: "All fields are required",
         })
     }
 
@@ -99,7 +99,7 @@ exports.signUp = async (req, res) => {
     const existingUser = await User.findOne({email});
     if(existingUser){
         return res.status(400).json({
-            success:true,
+            success:false,
             message:"User is already registered",
         })
     }
@@ -109,7 +109,7 @@ exports.signUp = async (req, res) => {
     console.log(`Recent OTP is: ${recentOtp}`);
 
     // validate otp
-    if (recentOtp.length == 0){
+    if (recentOtp.length === 0){
         // otp not found
         return res.status(400).json({
             success:false,
@@ -119,7 +119,7 @@ exports.signUp = async (req, res) => {
         return res.status(400).json({
             success:false,
             message:"Invalid OTP"
-        })
+        });
     }
 
     // hash password
@@ -139,10 +139,10 @@ exports.signUp = async (req, res) => {
         email,
         contactNumber,
         password:hashedPassword,
-        accountType,
+        accountType:accountType,
         additionalDetails:profileDetails._id,
         image: `https://api.dicebear.com/5.x/initials/svg?seed=${firstName} ${lastName}`,
-    })
+    });
 
     // return res
     return res.status(200).json({
@@ -154,7 +154,7 @@ exports.signUp = async (req, res) => {
         console.log(error);
         return res.status(500).json({
             success:false,
-            success:"User cannot be registered, please try again"
+            message:"User cannot be registered, please try again"
         })
     }
 };
@@ -227,10 +227,10 @@ exports.login = async (req, res) => {
 exports.changePassword = async (req, res) => {
     try{
         //get user data
-        const userDetails = await User.findById(req.user.id);
+        const userDetails = await User.findById(req.User.id);
 
         // fetch the data
-        const {oldPassword, newPassword, confirmNewPassword} = req.body;
+        const {oldPassword, newPassword, confirmNewPassword, email} = req.body;
 
         // validate the data
         if(!oldPassword || !newPassword || !confirmNewPassword || !email){
@@ -257,7 +257,8 @@ exports.changePassword = async (req, res) => {
 
             // hashed password
             const hashedPassword = await bcrypt.hash(newPassword, 10);
-            const updatedUser = await User.findOneAndUpdate(req.user.id,{
+            console.log(req.User)
+            const updatedUser = await User.findOneAndUpdate(req.User._id,{
                 password:hashedPassword,
             }, {new:true})
             // send mail
@@ -290,7 +291,7 @@ exports.changePassword = async (req, res) => {
         console.log(error);
         return res.status(500).json({
             sucess:false,
-            message:"Password not changed, please try again",
+            message:"Password not changed, please try again later",
         })
     }
 }

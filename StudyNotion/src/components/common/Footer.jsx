@@ -14,7 +14,7 @@ const Footer = () => {
           {/* Left Section */}
         <div className="flex flex-row mt-20 h-fit w-[50%] gap-[65px]">
           <div className="flex flex-col gap-5">
-            <img src={FooterLogo} alt="" className="w-[160px] h-[32px]" />
+            <img src={FooterLogo} alt="logo" className="w-[160px] h-[32px]" loading="lazy" />
             <p className="text-[16px] text-richblack-100 font-semibold">Company</p>
             <div className="text-[14px] text-richblack-400 flex flex-col gap-2">
               <div>About</div>

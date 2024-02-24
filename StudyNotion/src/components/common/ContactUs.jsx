@@ -48,7 +48,7 @@ const ContactUs = () => {
               name="firstname"
               id="firstName"
               placeholder="Enter first name"
-              className="text-[#999DAA] text-[16px] bg-richblack-800 p-[12px] rounded-md lg:w-[258px]"
+              className="text-[#999DAA] text-[16px] bg-richblack-800 p-[12px] rounded-md lg:w-[258px] shadow-vs"
               {...register("firstname", { required: true })}
             />
             {errors.firstname && (
@@ -65,7 +65,7 @@ const ContactUs = () => {
               name="lastname"
               id="lastName"
               placeholder="Enter last name"
-              className="text-[#999DAA] text-[16px] bg-richblack-800 p-[12px] rounded-md lg:w-[258px]"
+              className="text-[#999DAA] text-[16px] bg-richblack-800 p-[12px] rounded-md lg:w-[258px] shadow-vs"
               {...register("lastname", { required: false })}
             />
           </div>
@@ -78,7 +78,7 @@ const ContactUs = () => {
             name="email"
             id="email"
             placeholder="Enter your email"
-            className="text-[#999DAA] text-[16px] bg-richblack-800 p-[12px] rounded-md lg:w-[536px]"
+            className="text-[#999DAA] text-[16px] bg-richblack-800 p-[12px] rounded-md lg:w-[536px] shadow-vs"
             {...register("email", { required: true })}
           />
           {errors.email && (
@@ -97,7 +97,7 @@ const ContactUs = () => {
           name="dropdown"
           id="dropdown"
           {...register("countrycode", {required: true})}
-          className="max-w-[81px] radius-[8px] text-left text-[#999DAA] text-[16px] bg-richblack-800 p-[12px] rounded-md lg:h-[48px]"
+          className="max-w-[81px] radius-[8px] text-left text-[#999DAA] text-[16px] bg-richblack-800 p-[12px] rounded-md lg:h-[48px] shadow-vs"
           >
             {
               countryCodes.map((country, index) => (
@@ -114,7 +114,7 @@ const ContactUs = () => {
           name="phonenumber"
           id="phonenumber"
           placeholder="Enter phone number"
-          className="text-[#999DAA] text-[16px] bg-richblack-800 p-[12px] rounded-md lg:w-[435px]"
+          className="text-[#999DAA] text-[16px] bg-richblack-800 p-[12px] rounded-md lg:w-[435px] shadow-vs"
           {...register("phonenumber", { required: true, maxLength: {value:10, message:"Invalid Phone Number"}, minLength: {value:8, message:"Invalid Phone Number"} })}
           ></input>
         </div>
@@ -136,7 +136,7 @@ const ContactUs = () => {
             cols="50"
             rows="7"
             placeholder="Enter your message here"
-            className="text-[#999DAA] text-[16px] bg-richblack-800 p-[12px] rounded-md w-[536px]"
+            className="text-[#999DAA] text-[16px] bg-richblack-800 p-[12px] rounded-md w-[536px] shadow-vs"
             {...register("message", { required: true })}
           ></textarea>
           {errors.message && (

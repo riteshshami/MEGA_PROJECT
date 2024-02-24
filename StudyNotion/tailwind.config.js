@@ -135,6 +135,7 @@ module.exports = {
       boxShadow: {
         '3xl' : '15px 15px 0px white',
         '4xl' : '-15px -15px 0px white',
+        'vs'  :  '0 -1px 0px 0px white inset'
       },
     },
   },

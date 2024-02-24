@@ -5,7 +5,7 @@ import compare_with_others from "../../../assets/Images/Compare_with_others.png"
 import plan_your_lesson from "../../../assets/Images/Plan_your_lessons.png"
 import CTAButton from './Button'
 
-const LearningLangugaeSection = () => {
+const LearningLanguageSection = () => {
   return (
     <div className='mt-[130px] mb-32'>
       <div className='flex flex-col gap-5 items-center'>
@@ -28,4 +28,4 @@ const LearningLangugaeSection = () => {
   )
 }
 
-export default LearningLangugaeSection
+export default LearningLanguageSection

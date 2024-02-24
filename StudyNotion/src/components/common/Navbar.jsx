@@ -7,19 +7,8 @@ import { useSelector } from 'react-redux';
 import { AiOutlineShoppingCart} from "react-icons/ai";
 import ProfileDropDown from '../core/Auth/ProfileDropDown';
 import { apiConnector } from '../../services/apiconnector';
-import { categories } from '../../services/apis';
+import { courseEndpoints } from '../../services/apis';
 import {IoIosArrowDropdownCircle} from 'react-icons/io';
-
-const subLinks = [
-  {
-    title: 'python',
-    path: '/catalog/python'
-  },
-  {
-    title: 'web-dev',
-    path: '/catalog/web-development'
-  },
-]
 
 const Navbar = () => {
 
@@ -28,13 +17,12 @@ const Navbar = () => {
   const {totalItems} = useSelector((state) => state.cart);
   const location = useLocation();
 
-  const [ssubLinks, setSsubLinks] = useState([]);
+  const [subLinks, setSubLinks] = useState([]);
 
   const fetchSubLinks = async() => {
     try{
-      const result = await apiConnector("GET", categories.CATEGORIES_API);
-      console.log("Sublinks", result);
-      setSsubLinks(result.data.data);
+      const result = await apiConnector("GET", courseEndpoints.COURSE_CATEGORIES_API);
+      setSubLinks(result?.data?.allCategories);
     }catch(error){
       console.log("Could not fetch the catalog list");
     }
@@ -47,16 +35,16 @@ const Navbar = () => {
   }
 
   return (
-    <div className='flex h-14 items-center justify-center border-b-[1px] border-b-richblack-700'>
+    <div className='flex h-14 items-center justify-center border-b-[1px] bg-richblack-800 border-b-richblack-700'>
       <div className='flex w-11/12 max-w-maxContent items-center justify-between'>
       {/* Image */}
         <Link to="/">
-        <img alt='logo' src={logo} width={160} height={42} loading='lazy'/>
+        <img alt='logo' src={logo} width={160} height={42} loading='lazy' className='md:shrink-0' />
         </Link>
 
         {/* nav links */}
         <nav>
-          <ul className='flex gap-x-6 text-richblack-25'>
+          <ul className='flex gap-x-6 text-richblack-25 sm:max-md:hidden'>
             {NavbarLinks.map((link, index) => {
               return(
                 <li key={index}>
@@ -71,10 +59,10 @@ const Navbar = () => {
                           subLinks.length > 0 ? (
                             <div className='text-[14px]'>
                             {
-                              subLinks.map((link, index) => {
+                              subLinks.map((item, index) => {
                                 return(
-                                   <Link to={link?.path} key={index}>
-                                      <p>{link.title}</p>
+                                   <Link to={`/catalog/${item?.name.split(/[ \/]/).join("-").toLowerCase()}`} key={index}>
+                                      <p>{item?.name}</p>
                                    </Link>
                                 )
                               })
@@ -102,7 +90,7 @@ const Navbar = () => {
                     <AiOutlineShoppingCart/>
                     {
                       totalItems > 0 && (
-                        <span>{totalItems}</span>
+                        <span className='absolute rounded-full bg-yellow-50 bottom-3 left-3 h-3 w-3 text-xs font-semibold text-center'>{totalItems}</span>
                       )
                     }
                 </Link>

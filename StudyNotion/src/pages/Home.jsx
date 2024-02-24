@@ -6,9 +6,10 @@ import CTAButton from "../components/core/HomePage/Button";
 import Banner from "../assets/Images/banner.mp4";
 import CodeBlocks from "../components/core/HomePage/CodeBlocks";
 import TimelineSection from "../components/core/HomePage/TimelineSection";
-import LearningLangugaeSection from "../components/core/HomePage/LearningLangugaeSection";
+import LearningLanguageSection from "../components/core/HomePage/LearningLanguageSection";
 import InstructorSection from "../components/core/HomePage/InstructorSection";
 import ExploreMore from "../components/core/HomePage/ExploreMore";
+import ReviewSlider from "../components/common/ReviewSlider";
 import Footer from "../components/common/Footer";
 
 const Home = () => {
@@ -74,6 +75,9 @@ const Home = () => {
             }}
             codeblock={`<!DOCTYPE html>\n<html>\n<head><title>Example</title><linkrel="stylesheet"href="styles.css">\n<head>\n<body>\n<h1><ahref="/">Header</a>\n</h1>\n<nav><ahref="one/">One</\na><ahref="two/">Two</\na><ahref="three/">Three</a></nav>`}
             codeColor={"text-white"}
+            blobColor1= {"#8A2BE2"}
+            blobColor2= {"#FFA500"}
+            blobColor3= {"#F8F8FF"}
           />
         </div>
 
@@ -100,8 +104,12 @@ const Home = () => {
             }}
             codeblock={`<!DOCTYPE html>\n<html>\n<head><title>Example</title><linkrel="stylesheet"href="styles.css">\n<head>\n<body>\n<h1><ahref="/">Header</a>\n</h1>\n<nav><ahref="one/">One</\na><ahref="two/">Two</\na><ahref="three/">Three</a></nav>`}
             codeColor={"text-white"}
+            blobColor1= {"#1FA2FF"}
+            blobColor2= {"#12D8FA"}
+            blobColor3= {"#A6FFCB"}
           />
         </div>
+        
         <ExploreMore/>
       </div>
 
@@ -109,7 +117,7 @@ const Home = () => {
       <div className="bg-[#f9f9f9] text-richblack-700">
         <div className="homepage_bg h-[310px]">
           <div className="w-11/12 max-w-maxContent flex flex-col items-center justify-between gap-5 mx-auto">
-            <div className="mt-[9rem]">
+            <div className="mt-[12rem]">
               <div className="flex flex-row gap-7 text-white">
                 <CTAButton active={true} linkto={"/signup"}>
                   <div className="flex items-center gap-3 ">
@@ -137,7 +145,7 @@ const Home = () => {
 
           <TimelineSection/>
 
-          <LearningLangugaeSection/>
+          <LearningLanguageSection/>
         </div>
 
       </div>
@@ -148,6 +156,7 @@ const Home = () => {
 
         <h2 className="text-center text-4xl font-semibold mt-10">Reviews from other learners</h2>
         {/* Review section here */}
+        <ReviewSlider/>
       </div>
 
       {/* Footer */}

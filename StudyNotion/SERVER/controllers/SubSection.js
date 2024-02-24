@@ -7,11 +7,11 @@ const { uploadImageToCloudinary } = require("../utils/imageUploader");
 exports.createSubSection = async (req, res) => {
     try{
         // fetch data from ReportBody
-        const {sectionId, title, timeDuration , description} = req.body;
+        const {sectionId, title, description} = req.body;
         // extract file/video
-        const video = req.files.videoFile;
+        const video = req.files.video;
         // validation
-        if(!sectionId || !title || !timeDuration || !description || !video){
+        if(!sectionId || !title || !description || !video){
             return res.status(400).json({
                 success:true,
                 message:'All fields are required',
@@ -22,7 +22,7 @@ exports.createSubSection = async (req, res) => {
         // create subsection
         const SubSectionDetails = await SubSection.create({
             title:title,
-            timeDuration:timeDuration,
+            // timeDuration:timeDuration,
             description:description,
             videoUrl:uploadDetails.secure_url,
         })
@@ -33,8 +33,8 @@ exports.createSubSection = async (req, res) => {
 
             }},
             {new:true},
-            // HW: log updated section here, after adding populate query
-            ).populate("updatedSection").exec();
+            ).populate("subSection").exec();
+            console.log("Updated Section", updatedSection);
         // return response
         return res.status(200).json({
             success:true,
@@ -54,7 +54,7 @@ exports.createSubSection = async (req, res) => {
 exports.updateSubSection = async (req, res) => {
     try{
         // fetch data from ReportBody
-        const {subSectionId, title, timeDuration , description} = req.body;
+        const {subSectionId, sectionId, title, timeDuration , description} = req.body;
         // extract file/video
         const video = req.files.videoFile;
         // validation
@@ -77,9 +77,13 @@ exports.updateSubSection = async (req, res) => {
             },
             {new:true});
 
+        const updatedSection = await Section.findById(sectionId).populate("subSection");
+
+
         // return response
         return res.status(200).json({
             success:true,
+            data: updatedSection,
             message:"Section updated successfully",
             subSection,
         });
@@ -110,9 +114,13 @@ exports.deleteSubSection = async (req, res) => {
             .status(404)
             .json({ success: false, message: "SubSection not found" })
         }
+
+        const updatedSection = await Section.findById(sectionId).populate("subSection");
+
         // return response
         return res.status(200).json({
             success:true,
+            data: updatedSection,
             message:'Sub-Section deleted successfully'
         });
     }catch(error){
