@@ -66,8 +66,7 @@ const NestedView = ({handleChangeEditSectionName}) => {
                             onClick={
                                 (e)=>{e.stopPropagation();
                                 handleChangeEditSectionName(section._id, section?.sectionName)
-                            }}
-                            >
+                            }}>
                             <MdEdit/>
                             </button>
                             <button onClick={() => {

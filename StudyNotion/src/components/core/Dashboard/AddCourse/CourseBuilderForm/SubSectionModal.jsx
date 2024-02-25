@@ -162,56 +162,6 @@ const SubSectionModal = ({
                         errors.lectureDesc && (<span>Lecture Description is required</span>)
                     }
                 </div>
-                {/* <div className='flex flex-col space-y-2 mt-5'>
-                    <h1 className='text-sm text-richblack-5'>Video Playback Time<sup className='text-pink-200'>*</sup></h1>
-                    <div className='flex flex-row justify-between'>
-                    <div>
-                        <input
-                            id='timeDurationHr'
-                            type='number'
-                            placeholder='HH'
-                            min="0"
-                            max="10000"
-                            {...register("timeDurationHr", {required:true})}
-                            className='w-full text-white rounded-lg p-3 gap-3 bg-richblack-700 shadow-vs'
-                        />
-                        <sub className='text-richblack-300 text-sm'>HH</sub>
-                        {
-                            errors.lectureTitle && (<span>Time Duration is required</span>)
-                        }
-                    </div>
-                    <div>
-                        <input
-                            id='timeDurationMin'
-                            type='number'
-                            placeholder='MM'
-                            min="0"
-                            max="60"
-                            {...register("timeDurationMin", {required:true})}
-                            className='w-full text-white rounded-lg p-3 gap-3 bg-richblack-700 shadow-vs'
-                        />
-                        <sub className='text-richblack-300 text-sm'>MM</sub>
-                        {
-                            errors.lectureTitle && (<span>Time Duration is required</span>)
-                        }
-                    </div>
-                    <div>
-                        <input
-                            id='timeDurationSec'
-                            type='number'
-                            placeholder='SS'
-                            min="0"
-                            max="60"
-                            {...register("timeDurationSec", {required:true})}
-                            className='w-full text-white rounded-lg p-3 gap-3 bg-richblack-700 shadow-vs'
-                        />
-                        <sub className='text-richblack-300 text-sm'>SS</sub>
-                        {
-                            errors.lectureTitle && (<span>Time Duration is required</span>)
-                        }
-                    </div>
-                    </div>
-                </div> */}
                 {
                     !view && (
                         <div>

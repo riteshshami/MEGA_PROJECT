@@ -57,7 +57,7 @@ const Catalog = () => {
                 <p>New</p>
             </div>
             <div>
-                <CourseSlider Courses={catalogPageData?.data?.selectedCategory?.courses} />
+                <CourseSlider Courses={catalogPageData?.data?.selectedCategory?.course} />
             </div>
         </div>
 
@@ -65,7 +65,7 @@ const Catalog = () => {
         <div>
             <p className='text-richblack-5 text-3xl font-semibold'>Top Courses in <span>{catalogPageData?.data?.selectedCategory?.name}</span></p>
             <div>
-                <CourseSlider Courses={catalogPageData?.data?.differentCategory?.courses} />
+                <CourseSlider Courses={catalogPageData?.data?.selectedCategory?.course} />
             </div>
         </div>
 
@@ -73,7 +73,7 @@ const Catalog = () => {
         <div>
             <p className='text-richblack-5 text-3xl font-semibold'>Frequently Bought</p>
             <div className='py-8'>
-                <div className='grid grid-cols-1 lg:grid-cols-2'>
+                <div className='grid grid-cols-1 lg:grid-cols-2 gap-5'>
                 {
                     catalogPageData?.data?.mostSellingCourses?.slice(0, 4)
                     .map((course, index) => {

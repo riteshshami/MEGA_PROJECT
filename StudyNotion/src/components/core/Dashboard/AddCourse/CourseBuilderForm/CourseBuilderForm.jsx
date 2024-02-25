@@ -72,9 +72,6 @@ const CourseBuilderForm = () => {
   }
 
   const handleChangeEditSectionName = (sectionId, sectionName) => {
-    console.log("editSectionName:", editSectionName);
-    console.log("sectionId:", sectionId);
-    console.log("sectionName:", sectionName);
   
     if (editSectionName === sectionId) {
       console.log("Cancelling edit...");
@@ -82,9 +79,7 @@ const CourseBuilderForm = () => {
       return;
     }
   
-    console.log("Setting editSectionName and value...");
     setEditSectionName(sectionId);
-    console.log("Section ID", editSectionName);
     setValue("sectionName", sectionName);
   };
   

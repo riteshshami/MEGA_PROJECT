@@ -2,6 +2,7 @@ const Course = require("../models/Course");
 const Category = require("../models/Category");
 const User = require("../models/User");
 const Section = require("../models/Section");
+const SubSection = require("../models/SubSection");
 const CourseProgress = require("../models/CourseProgress");
 const {uploadImageToCloudinary} = require("../utils/imageUploader");
 const {convertSecondsToDuration} = require("../utils/secToDuration");
@@ -282,9 +283,9 @@ exports.deleteCourse = async (req, res) => {
         for(const sectionId of courseSections){
             const section = await Section.findById(sectionId)
             if(section){
-                const subSections = section.subSections
+                const subSections = section.subSection
                 for(const subSectionId of subSections){
-                    await subSections.findByIdAndUpdate(subSectionId)
+                    await SubSection.findByIdAndDelete(subSectionId)
                 }
             }
             await Section.findByIdAndDelete(sectionId)
@@ -293,7 +294,7 @@ exports.deleteCourse = async (req, res) => {
 
         return res.status(200).json({
             success:true,
-            message: "Course added successfully"
+            message: "Course deleted successfully"
         })
     }catch(error){
         console.log(error)
