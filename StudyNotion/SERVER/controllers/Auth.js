@@ -189,12 +189,12 @@ exports.login = async (req, res) => {
                 accountType:  user.accountType,
             }
             const token = jwt.sign(payload, process.env.JWT_SECRET, {
-                expiresIn:"2h",
+                expiresIn:"7h",
             });
             user.token = token;
             user.password = undefined;
 
-            // cookie genration
+            // cookie generation
             const options = {
                 expires: new Date(Date.now() + 3*24*60*60*1000),
                 httpOnly:true,
@@ -217,7 +217,7 @@ exports.login = async (req, res) => {
     }catch(error){
         console.log(error);
         return res.status(500).json({
-            sucess:false,
+            success:false,
             message:"Login failure, please try again",
         })
     }
@@ -282,7 +282,7 @@ exports.changePassword = async (req, res) => {
             });
         }else{
             return res.status(400).json({
-                sucess:false,
+                success:false,
                 message:"New Password is not matching with the value of confirm password",
             })
         }
@@ -290,7 +290,7 @@ exports.changePassword = async (req, res) => {
     }catch(error){
         console.log(error);
         return res.status(500).json({
-            sucess:false,
+            success:false,
             message:"Password not changed, please try again later",
         })
     }
