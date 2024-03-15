@@ -54,14 +54,7 @@ export function signUp(
   return async (dispatch) => {
     const toastId = toast.loading("Loading...");
     dispatch(setLoading(true));
-    console.log("Sending data to back end");
-    console.log(accountType);
-    console.log(firstName);
-    console.log(lastName);
-    console.log(email);
-    console.log(password);
-    console.log(confirmPassword);
-    console.log(otp);
+
     try {
       const response = await apiConnector("POST", SIGNUP_API, {
         accountType,
