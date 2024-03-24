@@ -43,7 +43,7 @@ const Navbar = () => {
         </Link>
 
         {/* nav links */}
-        <nav>
+        <nav className='lg:opacity-100 sm:opacity-0'>
           <ul className='flex gap-x-6 text-richblack-25 sm:max-md:hidden'>
             {NavbarLinks.map((link, index) => {
               return(

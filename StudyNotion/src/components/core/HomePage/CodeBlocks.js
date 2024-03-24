@@ -16,7 +16,7 @@ const CodeBlocks = ({
   blobColor3,
 }) => {
   return (
-    <div className={`flex ${position} justify-between my-20 items-start gap-20`}>
+    <div className={`flex lg:${position} justify-between my-20 items-start gap-20`}>
       {/* Section 1 */}
       <div className="w-[45%] flex flex-col gap-8">
         {heading}
@@ -34,7 +34,7 @@ const CodeBlocks = ({
         </div>
       </div>
       {/* Section 2 */}
-      <div className={`lg:w-[50%] ${position === "lg:flex-row" ? "translate-x-28" : "-translate-x-20"}`}>
+      <div className={`lg:w-[50%] lg:${position === "lg:flex-row" ? "translate-x-28" : "-translate-x-20"}`}>
         <div className=" h-fit flex flex-row text-10 w-[100%] py-4 lg:w-[500px] bg-richblack-5 bg-opacity-10 backdrop-blur-xl rounded drop-shadow-lg absolute z-50">
           <div className="text-center flex flex-col w-[10%] text-richblack-400 font-inter font-bold">
             <p>1</p>

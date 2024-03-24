@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import countryCodes from "../../data/countrycode.json"
+import {apiConnector} from "../../services/apiconnector"
+import { contactusEndpoint } from "../../services/apis"
 
 const ContactUs = () => {
   const [loading, setLoading] = useState(false);
@@ -15,8 +17,7 @@ const ContactUs = () => {
     console.log("Logging Data", data);
     try {
       setLoading(true);
-      // const response = await apiConnector("POST", contactusEndpoint.CONTACT_US_API.data);
-      const response = { status: "OK" };
+      const response = await apiConnector("POST", contactusEndpoint.CONTACT_US_API, data);
       console.log("Contact Us Response", response);
       setLoading(false);
     } catch (error) {
