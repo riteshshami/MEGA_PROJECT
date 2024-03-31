@@ -53,7 +53,7 @@ const Home = () => {
 
         <div>
           <CodeBlocks
-            position={"lg:flex-row"}
+            position={"flex-row"}
             heading={
               <div className="text-4xl font-semibold">
                 Unlock your <HighlightText text={"coding potential"} /> with our
@@ -83,7 +83,7 @@ const Home = () => {
 
         <div>
           <CodeBlocks
-            position={"lg:flex-row-reverse"}
+            position={"flex-row-reverse"}
             heading={
               <div className="text-4xl font-semibold">
                 Start <HighlightText text={"coding in seconds"} />
