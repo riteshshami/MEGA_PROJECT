@@ -32,20 +32,17 @@ const ViewCourse = () => {
     }, []);
 
   return (
-    <div className='flex flex-col'>
-    <div className='flex flex-row gap-2'>
-      <VideoDetailsSidebar setReviewModal={setReviewModal} />
-        <div>
-            <Outlet/>
+    <>
+      <div className="relative flex min-h-[calc(100vh-3.5rem)]">
+        <VideoDetailsSidebar setReviewModal={setReviewModal} />
+        <div className="h-[calc(100vh-3.5rem)] flex-1 overflow-auto">
+          <div className="mx-6">
+            <Outlet />
+          </div>
         </div>
-    </div>
-    <div>
-      <Footer/>
-    </div>
-    {
-        reviewModal && <CourseReviewModal setReviewModal={setReviewModal} /> 
-    }
-    </div>
+      </div>
+      {reviewModal && <CourseReviewModal setReviewModal={setReviewModal} />}
+    </>
   )
 }
 

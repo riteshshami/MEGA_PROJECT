@@ -35,7 +35,7 @@ const SubSectionModal = ({
             setValue("lectureDesc", modalData.description);
             setValue("lectureVideo", modalData.videoUrl);
         }
-    }, []);
+    });
 
     const onSubmit = async (data) => {
     

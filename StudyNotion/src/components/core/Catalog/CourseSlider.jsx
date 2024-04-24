@@ -28,11 +28,11 @@ const CourseSlider = ({Courses}) => {
           breakpoints={{1024:{slidesPerView:3,}}}
           >
               {
-                Courses.map((course, index) => {
+                Courses.map((course, index) => (
                   <SwiperSlide key={index}>
                      <Course_Card course={course} Height={"h-[250px]"} />
                   </SwiperSlide>
-                }) 
+                )) 
               }
           </Swiper>
         ): (

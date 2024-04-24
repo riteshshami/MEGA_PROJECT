@@ -3,7 +3,8 @@ import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom';
 import CoursesTable from './InstructorCourses/CoursesTable';
 import { fetchInstructorCourses } from '../../../services/operators/courseDetailsAPI';
-import {IoMdAddCircleOutline} from "react-icons/io"
+import {VscAdd} from "react-icons/vsc";
+import IconBtn from '../../common/IconBtn';
 
 const MyCourses = () => {
 
@@ -22,21 +23,18 @@ const MyCourses = () => {
     }, []);
 
   return (
-      <div className="flex flex-col gap-4">
-        <h1 className='text-richblack-5 text-3xl font-semibold p-[24px] -translate-x-4'>My Courses</h1>
-        <div>
-        <button 
-        onClick={() => navigate("/dashboard/add-course")}
-        className='flex flex-row gap-2 px-6 py-3 rounded-lg bg-yellow-50 text-richblack-900 shadow-vs cursor-pointer text-center font-medium'
-        >
-          Add Course
-          <IoMdAddCircleOutline className='h-[18px] w-[18px] mt-[2px]'/>
-        </button>
-        </div>
-        {
-        courses.length > 0 && <CoursesTable courses={courses} setCourses={setCourses} />
-        }
-      </div>
+    <div>
+    <div className="mb-14 flex items-center justify-between">
+      <h1 className="text-3xl font-medium text-richblack-5">My Courses</h1>
+      <IconBtn
+        text="Add Course"
+        onclick={() => navigate("/dashboard/add-course")}
+      >
+        <VscAdd />
+      </IconBtn>
+    </div>
+    {courses && <CoursesTable courses={courses} setCourses={setCourses} />}
+  </div>
   )
 }
 

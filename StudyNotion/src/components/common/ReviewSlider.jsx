@@ -3,7 +3,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/free-mode";
 import "swiper/css/pagination";
-import { Autoplay, Pagination, Navigation, FreeMode } from "swiper/modules";
+import { Autoplay, Pagination, FreeMode } from "swiper/modules";
 import ReactStars from "react-rating-stars-component";
 import {apiConnector} from "../../services/apiconnector";
 import {ratingsEndpoints} from "../../services/apis";
@@ -13,7 +13,6 @@ import { FaStar } from "react-icons/fa";
 const ReviewSlider = () => {
 
     const [reviews, setReviews] = useState([]);
-    const truncateWords = 15;
 
     useEffect(() => {
         const fetchAllReviews = async() => {
@@ -26,7 +25,7 @@ const ReviewSlider = () => {
             console.log("Printing Reviews", reviews);
         }
         fetchAllReviews();
-    }, []);
+    });
 
   return (
     <div className="text-white m-10">

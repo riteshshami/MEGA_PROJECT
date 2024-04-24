@@ -1,264 +1,401 @@
-import React, { useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate, useParams } from 'react-router-dom';
-import { buyCourse } from '../services/operators/studentFeaturesAPI';
-import { fetchCourseDetails } from '../services/operators/courseDetailsAPI';
-import GetAvgRating from "../utils/avgRating"
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
+import { buyCourse } from "../services/operators/studentFeaturesAPI";
+import { fetchCourseDetails } from "../services/operators/courseDetailsAPI";
+import CourseAccordionBar from "../components/core/Course/CourseAccordianBar";
 import Error from "./Error";
 import ConfirmationModal from "../components/common/ConfirmationModal";
 import RatingStars from "../components/common/RatingStars";
 import CourseDetailsCard from "../components/core/Course/CourseDetailsCard";
-import {formatDate} from "../services/formatDate";
-import { IoInformationCircleOutline } from "react-icons/io5";
-import { PiGlobeBold } from "react-icons/pi";
-import Footer from '../components/common/Footer';
-import {IoIosArrowUp} from "react-icons/io";
-import { HiTv } from "react-icons/hi2";
+import { formatDate } from "../services/formatDate";
+import { BiInfoCircle } from "react-icons/bi";
+import { HiOutlineGlobeAlt } from "react-icons/hi";
+import Markdown from "react-markdown";
+import Footer from "../components/common/Footer";
+
 
 const CourseDetails = () => {
+  const { user } = useSelector((state) => state.profile);
+  const { token } = useSelector((state) => state.auth);
+  const { loading } = useSelector((state) => state.profile);
+  const { paymentLoading } = useSelector((state) => state.course);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { courseId } = useParams();
 
-    const {user} = useSelector((state)=>state.profile);
-    const {token} = useSelector((state)=>state.auth);
-    const {loading} = useSelector((state) => state.profile);
-    const {paymentLoading} = useSelector((state) => state.course);
-    const dispatch = useDispatch();
-    const navigate = useNavigate();
-    const {courseId} = useParams();
+  const [response, setResponse] = useState(null);
+  const [confirmationModal, setConfirmationModal] = useState(null);
+  const [isClicked, setIsClicked] = useState(false);
 
-    const [response, setResponse] = useState(null);
-    const [confirmationModal, setConfirmationModal] = useState(null);
-    const [isClicked, setIsClicked] = useState(false);
-
-    useEffect(() =>{
-        ;(async() => {
-            try{
-                const res = await fetchCourseDetails(courseId);
-                setResponse(res);
-            }catch(error){
-                console.log("Could not fetch course details");
-            }
-        })()
-    }, [courseId]);
-
-    useEffect(() => {
-        console.log("CourseDetails.jsx line:45 pages folder", response);
-    })
-
-
-    function GetAvgRating(ratingArr){
-        console.log(ratingArr);
-        if(ratingArr.length === 0) return 0
-        const totalReviewCount = ratingArr?.reduce((acc, curr) => {
-            acc += curr.rating
-            return acc
-        }, 0)
-    
-        const multiplier = Math.pow(10, 1)
-        const avgReviewCount = Math.round((totalReviewCount / ratingArr?.length) * multiplier) / multiplier
-    
-        return avgReviewCount;
-    }
-
-
-    const [isActive, setIsActive] = useState([]);
-    const handleActive = (id) => {
-        setIsActive(
-            !isActive.includes(id) ? isActive.concat(id) : isActive.filter((e)=>e !== id)
-        )
-    }
-
-    const [totalNoOfLectures, setTotalNoOfLectures] = useState(0);
-    useEffect(() => {
-        let lectures = 0;
-        response?.data?.courseDetails?.courseContent?.forEach((sec) => {
-            lectures += sec.subSection.length || 0
-        })
-        setTotalNoOfLectures(lectures);
-    })
-
-    const handleBuyCourse = () => {
-        if(token){
-            buyCourse(token, [courseId], user, navigate, dispatch);
-            return;
-        }
-        setConfirmationModal({
-            text1:"You are not Logged In",
-            text2:"Please login to purchase the course",
-            btn1Text:"Login",
-            btn2Text:"Cancel",
-            btn1Handler: () => {navigate("/login")},
-            btn2Handler: () => {setConfirmationModal(null)}
-        })
-    }
-
-    const handleClick = (id) => {
-        handleActive(id);
-        setIsClicked(!isClicked);
-    }
-    
-    const handleCollapseAll = () => {
-        isActive.map((element) => {
-            setIsClicked(!isClicked)
-        })
-        setIsActive([])
-    }
-
-    if (paymentLoading) {
-        return (
-          <div className="grid min-h-[calc(100vh-3.5rem)] place-items-center">
-            <div className="spinner"></div>
-          </div>
-        )
+  useEffect(() => {
+    (async () => {
+      try {
+        const res = await fetchCourseDetails(courseId);
+        setResponse(res);
+      } catch (error) {
+        console.log("Could not fetch course details");
       }
+    })();
+  }, [courseId]);
 
-    if(loading || !response) {
-        return (
-            <div>
-                Loading...
-            </div>
-        )
+  useEffect(() => {
+    console.log("CourseDetails.jsx line:45 pages folder", response);
+  });
+
+  function GetAvgRating(ratingArr) {
+    console.log(ratingArr);
+    if (ratingArr.length === 0) return 0;
+    const totalReviewCount = ratingArr?.reduce((acc, curr) => {
+      acc += curr.rating;
+      return acc;
+    }, 0);
+
+    const multiplier = Math.pow(10, 1);
+    const avgReviewCount =
+      Math.round((totalReviewCount / ratingArr?.length) * multiplier) /
+      multiplier;
+
+    return avgReviewCount;
+  }
+
+  const [isActive, setIsActive] = useState([]);
+  const handleActive = (id) => {
+    setIsActive(
+      !isActive.includes(id)
+        ? isActive.concat(id)
+        : isActive.filter((e) => e !== id)
+    );
+  };
+
+  const [totalNoOfLectures, setTotalNoOfLectures] = useState(0);
+  useEffect(() => {
+    let lectures = 0;
+    response?.data?.courseDetails?.courseContent?.forEach((sec) => {
+      lectures += sec.subSection.length || 0;
+    });
+    setTotalNoOfLectures(lectures);
+  });
+
+  const handleBuyCourse = () => {
+    if (token) {
+      buyCourse(token, [courseId], user, navigate, dispatch);
+      return;
     }
+    setConfirmationModal({
+      text1: "You are not Logged In",
+      text2: "Please login to purchase the course",
+      btn1Text: "Login",
+      btn2Text: "Cancel",
+      btn1Handler: () => {
+        navigate("/login");
+      },
+      btn2Handler: () => {
+        setConfirmationModal(null);
+      },
+    });
+  };
 
-    if(!response.success){
-        return(
-            <div>
-                <Error/>
-            </div>
-        )
-    }
+  const handleClick = (id) => {
+    handleActive(id);
+    setIsClicked(!isClicked);
+  };
 
-    const {
-        courseName,
-        courseDescription,
-        whatYouWillLearn,
-        courseContent,
-        ratingAndReviews,
-        instructor,
-        studentsEnrolled,
-        createdAt,
-        category,
-    } = response.data?.courseDetails;
+  const handleCollapseAll = () => {
+    isActive.map((element) => {
+      setIsClicked(!isClicked);
+    });
+    setIsActive([]);
+  };
 
+  if (paymentLoading) {
     return (
-        <div className='text-white'>
-            <div className="relative flex flex-col justify-start bg-richblack-800 gap-3 py-8 px-32">
-                <p className='text-richblack-400 text-sm '>{'Home / Catalog / '}<span className='text-yellow-50'>{category?.name}</span></p>
-                <p className='text-richblack-5 text-3xl font-medium'>{courseName}</p>
-                <p className='text-richblack-200 text-sm'>{courseDescription}</p>
-                <div className='flex gap-2'>
-                    <span>{GetAvgRating(ratingAndReviews)}</span>
-                    <RatingStars Review_Count={GetAvgRating(ratingAndReviews)} Star_Size={24}/>
-                    <span className='text-base text-richblack-25' >{`(${ratingAndReviews.length} reviews)`}</span>
-                    <span className='text-base text-richblack-25' >{`${studentsEnrolled.length} students enrolled`}</span>
-                </div>
-                <div>
-                    <p className='text-base text-richblack-25' >Created By {`${instructor.firstName}`}</p>
-                </div>
-                <div className='flex gap-x-3'>
-                    <div className='flex flex-row gap-x-2'>
-                    <IoInformationCircleOutline className='translate-y-1' />
-                    <p>Created At {formatDate(createdAt)}</p>
-                    </div>
-                    <div className='flex flex-row gap-x-2'>
-                    <PiGlobeBold className='translate-y-1' />
-                    <p>{" "}English</p>
-                    </div>
-                </div>
+      <div className="grid min-h-[calc(100vh-3.5rem)] place-items-center">
+        <div className="spinner"></div>
+      </div>
+    );
+  }
 
-                <div className='absolute right-[100px]'>
-                    <CourseDetailsCard 
-                    course={response?.data?.courseDetails}
-                    setConfirmationModal = {setConfirmationModal}
-                    handleBuyCourse = {handleBuyCourse}
-                     />
-                </div>
-            </div>
+  if (loading || !response) {
+    return <div>Loading...</div>;
+  }
 
-            <div className='rounded-[1px] gap-6 p-8 mx-32 mt-5 mb-10 border-solid border-richblack-700 border-[1px] lg:max-w-[792px]'>
-                <p className='text-richblack-5 text-3xl font-medium'>What you'll learn</p>
-                <div className='text-richblack-50'>{whatYouWillLearn}</div>
-            </div>
+  if (!response.success) {
+    return (
+      <div>
+        <Error />
+      </div>
+    );
+  }
 
-            <div className='mx-32 lg:max-w-[792px]'>
-                <div>
-                   <div className='gap-2'>
-                     <p className='text-2xl font-semibold'>Course Content</p>
-                     <div className='flex gap-x-3 justify-between text-richblack-400 text-sm'>
-                        <div>
-                        <span>
-                            {courseContent.length} sections
-                        </span>
-                        <span>{" • "}</span>
-                        <span>
-                            {totalNoOfLectures} lectures
-                        </span>
-                        <span>{" • "}</span>
-                        <span>
-                            {response?.data?.totalDuration} total length
-                        </span>
-                        </div>
-                        <button
-                        onClick={handleCollapseAll}
-                        className='text-yellow-50 font-medium'
-                        >
-                            Collapse all Sections
-                        </button>
-                     </div>
-                   </div>
-                   
-                   <div>
-                    {
-                        courseContent.map((section, index) => (
-                            <div key={index}>
-                                <div className='flex flex-row bg-richblack-600 text-richblack-5 px-8 py-4 border-b-[1px] border-solid border-richblack-600 gap-3 justify-between'>
-                                    <div className="flex flex-row gap-3">
-                                    <IoIosArrowUp className={`translate-y-1 ${isClicked ? 'rotate-180' : 'rotate-0' }`} onClick={() => handleClick(section?._id)} />
-                                        {
-                                        section?.sectionName
-                                        }
-                                    </div>
-                                    <div className='text-yellow-50'>
-                                        {section?.subSection?.length} lectures
-                                    </div>
-                                </div>
-                                <div>
-                                    {
-                                        section?.subSection.map((subSection, i) => (
-                                            <div className = {`gap-3 px-8 py-4 border-[1px] border-solid border-richblack-600 ${isClicked ? 'h-auto' : 'hidden'} `} key={i}>
-                                                <p className='flex flex-row gap-2 '>
-                                                    <HiTv className='h-[18px] w-[18px] translate-y-1'/>
-                                                    {subSection?.title}
-                                                </p>
-                                                <p className='text-richblack-50 text-sm ml-7'>{subSection?.description}</p>
-                                            </div>
-                                        ))
-                                    }
-                                </div>
-                            </div>
-                        ))
-                    }
-                   </div>
-                </div>
-            </div>
+  const {
+    courseName,
+    courseDescription,
+    thumbnail,
+    price,
+    whatYouWillLearn,
+    courseContent,
+    ratingAndReviews,
+    instructor,
+    studentsEnrolled,
+    createdAt,
+    category,
+  } = response.data?.courseDetails;
 
-            <div className='mx-32 my-5 gap-4 flex flex-col'>
-                <p className='text-richblack-5 text-2xl font-semibold'>Author</p>
-                <div className='flex flex-row gap-3'>
-                    <img src={instructor?.image ? instructor?.image : `https://api.dicebear.com/5.x/initials/svg?seed=${instructor.firstName} ${instructor.lastName}`} alt={instructor?.firstName} className='h-[52px] w-[52px] rounded-full object-cover' loading="lazy" />
-                    <p className='text-richblack-5 font-medium text-base translate-y-3'>{instructor?.firstName} {instructor?.lastName}</p>
-                </div>
-                <div className='text-sm text-richblack-50'>
-                    {instructor?.additionalDetails?.about}
-                </div>
+  return (
+    // <div className='text-white'>
+    //     <div className="relative flex flex-col justify-start bg-richblack-800 gap-3 py-8 px-32">
+    //         <p className='text-richblack-400 text-sm '>{'Home / Catalog / '}<span className='text-yellow-50'>{category?.name}</span></p>
+    //         <p className='text-richblack-5 text-3xl font-medium'>{courseName}</p>
+    //         <p className='text-richblack-200 text-sm'>{courseDescription}</p>
+    //         <div className='flex gap-2'>
+    //             <span>{GetAvgRating(ratingAndReviews)}</span>
+    //             <RatingStars Review_Count={GetAvgRating(ratingAndReviews)} Star_Size={24}/>
+    //             <span className='text-base text-richblack-25' >{`(${ratingAndReviews.length} reviews)`}</span>
+    //             <span className='text-base text-richblack-25' >{`${studentsEnrolled.length} students enrolled`}</span>
+    //         </div>
+    //         <div>
+    //             <p className='text-base text-richblack-25' >Created By {`${instructor.firstName}`}</p>
+    //         </div>
+    //         <div className='flex gap-x-3'>
+    //             <div className='flex flex-row gap-x-2'>
+    //             <IoInformationCircleOutline className='translate-y-1' />
+    //             <p>Created At {formatDate(createdAt)}</p>
+    //             </div>
+    //             <div className='flex flex-row gap-x-2'>
+    //             <PiGlobeBold className='translate-y-1' />
+    //             <p>{" "}English</p>
+    //             </div>
+    //         </div>
+
+    //         <div className='absolute right-[100px]'>
+    //             <CourseDetailsCard
+    //             course={response?.data?.courseDetails}
+    //             setConfirmationModal = {setConfirmationModal}
+    //             handleBuyCourse = {handleBuyCourse}
+    //              />
+    //         </div>
+    //     </div>
+
+    //     <div className='rounded-[1px] gap-6 p-8 mx-32 mt-5 mb-10 border-solid border-richblack-700 border-[1px] lg:max-w-[792px]'>
+    //         <p className='text-richblack-5 text-3xl font-medium'>What you'll learn</p>
+    //         <div className='text-richblack-50'>{whatYouWillLearn}</div>
+    //     </div>
+
+    //     <div className='mx-32 lg:max-w-[792px]'>
+    //         <div>
+    //            <div className='gap-2'>
+    //              <p className='text-2xl font-semibold'>Course Content</p>
+    //              <div className='flex gap-x-3 justify-between text-richblack-400 text-sm'>
+    //                 <div>
+    //                 <span>
+    //                     {courseContent.length} sections
+    //                 </span>
+    //                 <span>{" • "}</span>
+    //                 <span>
+    //                     {totalNoOfLectures} lectures
+    //                 </span>
+    //                 <span>{" • "}</span>
+    //                 <span>
+    //                     {response?.data?.totalDuration} total length
+    //                 </span>
+    //                 </div>
+    //                 <button
+    //                 onClick={handleCollapseAll}
+    //                 className='text-yellow-50 font-medium'
+    //                 >
+    //                     Collapse all Sections
+    //                 </button>
+    //              </div>
+    //            </div>
+
+    //            <div>
+    //             {
+    //                 courseContent.map((section, index) => (
+    //                     <div key={index}>
+    //                         <div className='flex flex-row bg-richblack-600 text-richblack-5 px-8 py-4 border-b-[1px] border-solid border-richblack-600 gap-3 justify-between'>
+    //                             <div className="flex flex-row gap-3">
+    //                             <IoIosArrowUp className={`translate-y-1 ${isClicked ? 'rotate-180' : 'rotate-0' }`} onClick={() => handleClick(section?._id)} />
+    //                                 {
+    //                                 section?.sectionName
+    //                                 }
+    //                             </div>
+    //                             <div className='text-yellow-50'>
+    //                                 {section?.subSection?.length} lectures
+    //                             </div>
+    //                         </div>
+    //                         <div>
+    //                             {
+    //                                 section?.subSection.map((subSection, i) => (
+    //                                     <div className = {`gap-3 px-8 py-4 border-[1px] border-solid border-richblack-600 ${isClicked ? 'h-auto' : 'hidden'} `} key={i}>
+    //                                         <p className='flex flex-row gap-2 '>
+    //                                             <HiTv className='h-[18px] w-[18px] translate-y-1'/>
+    //                                             {subSection?.title}
+    //                                         </p>
+    //                                         <p className='text-richblack-50 text-sm ml-7'>{subSection?.description}</p>
+    //                                     </div>
+    //                                 ))
+    //                             }
+    //                         </div>
+    //                     </div>
+    //                 ))
+    //             }
+    //            </div>
+    //         </div>
+    //     </div>
+
+    //     <div className='mx-32 my-5 gap-4 flex flex-col'>
+    //         <p className='text-richblack-5 text-2xl font-semibold'>Author</p>
+    //         <div className='flex flex-row gap-3'>
+    //             <img src={instructor?.image ? instructor?.image : `https://api.dicebear.com/5.x/initials/svg?seed=${instructor.firstName} ${instructor.lastName}`} alt={instructor?.firstName} className='h-[52px] w-[52px] rounded-full object-cover' loading="lazy" />
+    //             <p className='text-richblack-5 font-medium text-base translate-y-3'>{instructor?.firstName} {instructor?.lastName}</p>
+    //         </div>
+    //         <div className='text-sm text-richblack-50'>
+    //             {instructor?.additionalDetails?.about}
+    //         </div>
+    //     </div>
+    //     <Footer/>
+    //     {
+    //         confirmationModal && <ConfirmationModal modalData={confirmationModal}/>
+    //     }
+    // </div>
+    <>
+      <div className={`relative w-full bg-richblack-800`}>
+        {/* Hero Section */}
+        <div className="mx-auto box-content px-4 lg:w-[1260px] 2xl:relative ">
+          <div className="mx-auto grid min-h-[450px] max-w-maxContentTab justify-items-center py-8 lg:mx-0 lg:justify-items-start lg:py-0 xl:max-w-[810px]">
+            <div className="relative block max-h-[30rem] lg:hidden">
+              <div className="absolute bottom-0 left-0 h-full w-full shadow-[#161D29_0px_-64px_36px_-28px_inset]"></div>
+              <img
+                src={thumbnail}
+                alt="course thumbnail"
+                className="aspect-auto w-full"
+              />
             </div>
-            
-            {
-                confirmationModal && <ConfirmationModal modalData={confirmationModal}/>
-            }
-            
-            <Footer/>
+            <div
+              className={`z-30 my-5 flex flex-col justify-center gap-4 py-5 text-lg text-richblack-5`}
+            >
+              <div>
+                <p className="text-4xl font-bold text-richblack-5 sm:text-[42px]">
+                  {courseName}
+                </p>
+              </div>
+              <p className={`text-richblack-200`}>{courseDescription}</p>
+              <div className="text-md flex flex-wrap items-center gap-2">
+                <span className="text-yellow-25">{GetAvgRating(ratingAndReviews)}</span>
+                <RatingStars Review_Count={GetAvgRating(ratingAndReviews)} Star_Size={24} />
+                <span>{`(${ratingAndReviews.length} reviews)`}</span>
+                <span>{`${studentsEnrolled.length} students enrolled`}</span>
+              </div>
+              <div>
+                <p className="">
+                  Created By {`${instructor.firstName} ${instructor.lastName}`}
+                </p>
+              </div>
+              <div className="flex flex-wrap gap-5 text-lg">
+                <p className="flex items-center gap-2">
+                  {" "}
+                  <BiInfoCircle /> Created at {formatDate(createdAt)}
+                </p>
+                <p className="flex items-center gap-2">
+                  {" "}
+                  <HiOutlineGlobeAlt /> English
+                </p>
+              </div>
+            </div>
+            <div className="flex w-full flex-col gap-4 border-y border-y-richblack-500 py-4 lg:hidden">
+              <p className="space-x-3 pb-4 text-3xl font-semibold text-richblack-5">
+                Rs. {price}
+              </p>
+              <button className="yellowButton" onClick={handleBuyCourse}>
+                Buy Now
+              </button>
+              <button className="blackButton">Add to Cart</button>
+            </div>
+          </div>
+          {/* Courses Card */}
+          <div className="right-[1rem] top-[60px] mx-auto hidden min-h-[600px] w-1/3 max-w-[410px] translate-y-24 md:translate-y-0 lg:absolute  lg:block">
+            <CourseDetailsCard
+              course={response?.data?.courseDetails}
+              setConfirmationModal={setConfirmationModal}
+              handleBuyCourse={handleBuyCourse}
+            />
+          </div>
         </div>
-    )
-}
+      </div>
+      <div className="mx-auto box-content px-4 text-start text-richblack-5 lg:w-[1260px]">
+        <div className="mx-auto max-w-maxContentTab lg:mx-0 xl:max-w-[810px]">
+          {/* What will you learn section */}
+          <div className="my-8 border border-richblack-600 p-8">
+            <p className="text-3xl font-semibold">What you'll learn</p>
+            <div className="mt-5">
+              <Markdown>{whatYouWillLearn}</Markdown>
+            </div>
+          </div>
 
-export default CourseDetails
+          {/* Course Content Section */}
+          <div className="max-w-[830px] ">
+            <div className="flex flex-col gap-3">
+              <p className="text-[28px] font-semibold">Course Content</p>
+              <div className="flex flex-wrap justify-between gap-2">
+                <div className="flex gap-2">
+                  <span>
+                    {courseContent.length} {`section(s)`}
+                  </span>
+                  <span>
+                    {totalNoOfLectures} {`lecture(s)`}
+                  </span>
+                  <span>{response.data?.totalDuration} total length</span>
+                </div>
+                <div>
+                  <button
+                    className="text-yellow-25"
+                    onClick={() => setIsActive([])}
+                  >
+                    Collapse all sections
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* Course Details Accordion */}
+            <div className="py-4">
+              {courseContent?.map((course, index) => (
+                <CourseAccordionBar
+                  course={course}
+                  key={index}
+                  isActive={isActive}
+                  handleActive={handleActive}
+                />
+              ))}
+            </div>
+
+            {/* Author Details */}
+            <div className="mb-12 py-4">
+              <p className="text-[28px] font-semibold">Author</p>
+              <div className="flex items-center gap-4 py-4">
+                <img
+                  src={
+                    instructor.image
+                      ? instructor.image
+                      : `https://api.dicebear.com/5.x/initials/svg?seed=${instructor.firstName} ${instructor.lastName}`
+                  }
+                  alt="Author"
+                  className="h-14 w-14 rounded-full object-cover"
+                />
+                <p className="text-lg">{`${instructor.firstName} ${instructor.lastName}`}</p>
+              </div>
+              <p className="text-richblack-50">
+                {instructor?.additionalDetails?.about}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <Footer />
+      {confirmationModal && <ConfirmationModal modalData={confirmationModal} />}
+    </>
+  );
+};
+
+export default CourseDetails;

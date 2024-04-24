@@ -39,7 +39,7 @@ const Navbar = () => {
       <div className='flex w-11/12 max-w-maxContent items-center justify-between'>
       {/* Image */}
         <Link to="/">
-        <img alt='logo' src={logo} width={160} height={42} loading='lazy' className='md:shrink-0' />
+        <img alt='logo' src={logo} width={160} height={32} loading='lazy' className='md:shrink-0' />
         </Link>
 
         {/* nav links */}
@@ -61,7 +61,7 @@ const Navbar = () => {
                             {
                               subLinks.map((item, index) => {
                                 return(
-                                   <Link to={`/catalog/${item?.name.split(/[ \/]/).join("-").toLowerCase()}`} key={index}>
+                                   <Link to={`/catalog/${item?.name.split(/[\/]/).join("-").toLowerCase()}`} key={index}>
                                       <p>{item?.name}</p>
                                    </Link>
                                 )
@@ -83,14 +83,14 @@ const Navbar = () => {
         </nav>
 
         {/* Login / Signup / Dashboard */}
-        <div className='flex gap-x-4 items-center'>
+        <div className='md:flex gap-x-4 items-center hidden'>
             {
               user && user?.accountType !== "Instructor" && (
                 <Link to="/dashboard/cart" className='relative'>
-                    <AiOutlineShoppingCart/>
+                    <AiOutlineShoppingCart className="text-2xl text-richblack-100"/>
                     {
                       totalItems > 0 && (
-                        <span className='absolute rounded-full bg-yellow-50 bottom-3 left-3 h-3 w-3 text-xs font-semibold text-center'>{totalItems}</span>
+                        <span className="absolute -bottom-2 -right-2 grid h-5 w-5 place-items-center overflow-hidden rounded-full bg-richblack-600 text-center text-xs font-bold text-yellow-100">{totalItems}</span>
                       )
                     }
                 </Link>
