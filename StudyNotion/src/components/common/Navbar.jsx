@@ -56,6 +56,9 @@ const Navbar = () => {
                          <div className='invisible absolute left-[50%] translate-x-[-50%] translate-y-[30%] top-[50%] flex flex-col rounded-md bg-richblack-5 p-4 text-richblack-900 gap-2 opacity-0 transition-all duration-200 group-hover:visible group-hover:opacity-100 lg:w-[300px] z-50'>
                          <div className='absolute left-[50%] translate-y-[-45%] translate-x-[80%] top-0 h-6 w-6 rotate-45 rounded-sm bg-richblack-5'></div>
                          {
+                          subLinks.length === undefined ? (<div>Fetching...</div>) : (<div></div>)
+                         }
+                         {
                           subLinks.length > 0 ? (
                             <div className='text-[14px]'>
                             {
